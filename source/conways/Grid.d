@@ -72,25 +72,32 @@ struct Grid
 
     void update ( )
     {
-        foreach ( r, ref row; this.grid )
+        bool[][] new_grid;
+
+        foreach ( r, row; this.grid )
         {
-            foreach ( c, ref col; row )
+            new_grid.length++;
+
+            foreach ( c, col; row )
             {
                 auto alive_neighbors = this.noAliveNeighbors(r, c);
 
                 switch ( alive_neighbors )
                 {
                     case 2:
+                        new_grid[r] ~= col;
                         break;
                     case 3:
-                        col = true;
+                        new_grid[r] ~= true;
                         break;
                     default:
-                        col = false;
+                        new_grid[r] ~= false;
                         break;
                 }
             }
         }
+
+        this.grid = new_grid;
     }
 
     /**
