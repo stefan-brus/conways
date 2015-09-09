@@ -5,6 +5,7 @@
 module conways.GameOfLife;
 
 import conways.Cell;
+import conways.GameConfig;
 import conways.Grid;
 
 import adlib.ui.model.IGame;
@@ -17,12 +18,6 @@ import adlib.ui.SDL;
 
 class GameOfLife : IGame
 {
-    /**
-     * How often the grid should be updated
-     */
-
-    private enum MS_PER_STEP = 50;
-
     /**
      * Cell entities
      */
@@ -44,18 +39,33 @@ class GameOfLife : IGame
     private uint elapsed;
 
     /**
+     * The game configuration
+     */
+
+    private GameConfig config;
+
+    /**
+     * Constructor
+     *
+     * Params:
+     *      config = The game configuration
+     */
+
+    this ( GameConfig config )
+    {
+        this.config = config;
+    }
+
+    /**
      * Initialize the game
      */
 
     void init ( )
     {
-        enum GRID_WIDTH = 100,
-             GRID_HEIGHT = 100;
-
         this.alive = new Cell(true);
         this.dead = new Cell(false);
 
-        this.grid = Grid(GRID_WIDTH, GRID_HEIGHT);
+        this.grid = Grid(this.config.height, this.config.width, this.config.init_alive_frequency);
     }
 
     /**
@@ -106,7 +116,7 @@ class GameOfLife : IGame
      {
         this.elapsed += ms;
 
-        if ( this.elapsed > MS_PER_STEP )
+        if ( this.elapsed > this.config.ms_per_step )
         {
             this.grid.update();
 

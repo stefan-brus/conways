@@ -19,14 +19,21 @@ struct Grid
     alias grid this;
 
     /**
+     * The initial frequency of living cells
+     */
+
+    double frequency;
+
+    /**
      * Constructor
      *
      * Params:
      *      rows = The number of rows
      *      cols = The number of columns
+     *      frequency = The initial frequency of living cells
      */
 
-    this ( size_t rows, size_t cols )
+    this ( size_t rows, size_t cols, double frequency )
     {
         this.grid.length = rows;
 
@@ -34,6 +41,8 @@ struct Grid
         {
             row.length = cols;
         }
+
+        this.frequency = frequency;
 
         this.randomize();
     }
@@ -50,7 +59,7 @@ struct Grid
         {
             foreach ( ref col; row )
             {
-                col = uniform(0, 20) > 18;
+                col = uniform01() < this.frequency;
             }
         }
     }
