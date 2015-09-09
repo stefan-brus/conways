@@ -43,8 +43,6 @@ struct Grid
         }
 
         this.frequency = frequency;
-
-        this.randomize();
     }
 
     /**
@@ -143,5 +141,68 @@ struct Grid
         if ( row < max_row && col < max_col ) result += this.grid[row + 1][col + 1] ? 1 : 0;
 
         return result;
+    }
+
+    /**
+     * Load a grid from a file
+     *
+     * Params:
+     *      path = The path to the file
+     *      grid = The grid to load to
+     *
+     * Returns:
+     *      True if the parsing succeeded, false otherwise
+     */
+
+    static bool fromFile ( string path, ref Grid grid )
+    {
+        import std.stdio;
+
+        if ( grid.length > 0 )
+        {
+            return false;
+        }
+
+        foreach ( size_t i, string line; lines(File(path)) )
+        {
+            if ( line.length == 0 )
+            {
+                break;
+            }
+
+            grid.length++;
+
+            foreach ( c; line )
+            {
+                switch ( c )
+                {
+                    case '0':
+                        grid[i] ~= false;
+                        break;
+                    case '1':
+                        grid[i] ~= true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        if ( grid.length == 0 )
+        {
+            return false;
+        }
+
+        auto row_len = grid[0].length;
+
+        foreach ( row; grid )
+        {
+            if ( row.length != row_len )
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

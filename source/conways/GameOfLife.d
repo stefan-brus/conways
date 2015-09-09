@@ -49,11 +49,30 @@ class GameOfLife : IGame
      *
      * Params:
      *      config = The game configuration
+     *      init_grid = The initial grid
      */
 
-    this ( GameConfig config )
+    this ( GameConfig config, Grid init_grid )
     {
         this.config = config;
+        this.grid = Grid(this.config.height, this.config.width, this.config.init_alive_frequency);
+
+        if ( init_grid == Grid.init )
+        {
+            this.grid.randomize();
+        }
+        else
+        {
+            assert(init_grid.length <= this.config.height && init_grid[0].length <= this.config.width, "Initial grid too big");
+
+            foreach ( r, row; init_grid )
+            {
+                foreach ( c, col; row )
+                {
+                    this.grid[r][c] = col;
+                }
+            }
+        }
     }
 
     /**
@@ -64,8 +83,6 @@ class GameOfLife : IGame
     {
         this.alive = new Cell(true);
         this.dead = new Cell(false);
-
-        this.grid = Grid(this.config.height, this.config.width, this.config.init_alive_frequency);
     }
 
     /**
