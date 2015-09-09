@@ -112,7 +112,7 @@ struct Grid
         {
             foreach ( ref col; row )
             {
-                col = uniform(0, 10) > 8;
+                col = uniform(0, 20) > 18;
             }
         }
     }
