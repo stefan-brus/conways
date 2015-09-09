@@ -39,6 +39,12 @@ class GameOfLife : IGame
     private uint elapsed;
 
     /**
+     * Whether or not the game is paused
+     */
+
+    private bool paused;
+
+    /**
      * The game configuration
      */
 
@@ -119,6 +125,26 @@ class GameOfLife : IGame
 
     bool handle ( SDL.Event event )
     {
+        if ( event().type == SDL.Event.TEXTINPUT ) switch ( event().text.text[0] )
+        {
+            case ' ':
+                this.paused = true;
+                break;
+            case 'r':
+                this.grid.randomize();
+                break;
+            default:
+                break;
+        }
+        else if ( event().type == SDL.Event.KEYUP ) switch ( event.getScancode() )
+        {
+            case SDL.Event.SCAN_SPACE:
+                this.paused = false;
+                break;
+            default:
+                break;
+        }
+
         return true;
     }
 
@@ -133,7 +159,7 @@ class GameOfLife : IGame
      {
         this.elapsed += ms;
 
-        if ( this.elapsed > this.config.ms_per_step )
+        if ( !this.paused && this.elapsed > this.config.ms_per_step )
         {
             this.grid.update();
 
